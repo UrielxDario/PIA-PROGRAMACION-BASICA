@@ -3,8 +3,8 @@
 #include <string.h>
 #include <string>
 #include <fstream>
-#include<stdlib.h>// funcione new y delete
-
+#include<stdlib.h>
+#include <ctype.h>
 
 using namespace std; 
 
@@ -13,11 +13,13 @@ void Ver();
 void Modificar();
 void Eliminar();
 void Archivos();
+int Validar(string nombre[]);
 
-int reg = 1;
+int reg;
 int cantPacientes, *cantidad;
-string * nombre, *hora, *trat, *desc;
+string *nombre, *hora, *trat, *desc;
 float *precio, *total, *subtotal;
+int n;
 
 
 int main()
@@ -88,13 +90,30 @@ int main()
     return 0;
 }
 
+int Validar(string s)
+{
+	
+	for (int i = 0; i < s.length(); i++)
+    {
+        char x = s.at(i);
+        if ( !(x >= 65 && x<=90 || x >= 97 && x<=122 || x==32 ) )
+		{
+			cout << "INGRESE SOLO LETRAS \n";
+		   return 1;
+		}
+		 
+    }
+    return 2;
+}
+
 void Agendar()
 {
-	int s;
+	int val;
 	
 	system ("cls");
 	cout << "Numero de citas para agendar : ";
 	cin >> cantPacientes;
+	
 	
 	nombre = new string [cantPacientes];
 	hora = new string [cantPacientes];
@@ -110,22 +129,38 @@ void Agendar()
     	
     
         system("cls");
-        cout << "----------CITA " << i+1 << "------------"<<endl;
+        cout << "-----------------CITA " << i+1 << "-----------------"<<endl;
         
         
         while (getchar() != '\n');
         
+        do
+		{
 		cout << "*Ingrese nombre del paciente:" << endl;
         getline(cin, nombre[i]);
+        
+        val = Validar(nombre[i]);
+        } while (val == 1);
+        
         
         cout << "*Hora del tratamiento (formato 12hrs):" << endl;
         getline(cin, hora[i]);
         
+        do
+		{
         cout << "*Nombre del tratamiento:" << endl;
         getline(cin, trat[i]);
         
+        val = Validar(trat[i]);
+        } while (val == 1);
+        
+        do
+        {
+		
         cout << "*Descripcion del tratamiento:" << endl;
         getline(cin, desc[i]);
+        val = Validar(desc[i]);
+        } while (val == 1);
 
         cout << "*Precio unitario : " << endl <<"$";
         cin >> precio[i];
@@ -136,11 +171,11 @@ void Agendar()
         subtotal [i] = precio[i] * cantidad [i];
         total [i]= (subtotal [i] * 0.16) + subtotal[i];
         
-        cout << "---------------\n";
+        cout << "-----------------------\n";
         cout << "Subtotal: $" << subtotal[i]<<endl;
-        cout << "---------------\n";
+        cout << "-----------------------\n";
         cout << "TOTAL: $"<< total [i];
-		cout << endl << "---------------"<<endl;
+		cout << "\n-----------------------"<<endl;
         
 		system("pause");
 		
@@ -154,24 +189,24 @@ void Ver()
 	for (int i=0; i<cantPacientes;i++)
     {
     	
-        cout << "*********Cita " << i+1 << "*******"<<endl;
+        cout << "*************Cita " << i+1 << "*************"<<endl;
 		cout <<"Nombre: "<< nombre[i] <<endl;
 		cout <<"Hora: " << hora[i] <<endl;
 		cout <<"Tratamiento: " << trat[i] <<endl;
 		cout <<"Descripcion: " << desc[i] <<endl;
 		cout <<"Precio: "<< precio[i] <<endl;
 		cout <<"Cantidad: "<< cantidad[i] <<endl;
-		cout<< "..................."<<endl;
+		cout<< "........................"<<endl;
 		cout <<"Subtotal: $"<< subtotal[i] <<endl;
-		cout<< "-------------------"<<endl;
+		cout<< "-----------------------"<<endl;
 		cout <<"Total: $" << total[i] <<endl;
-		cout<< "-------------------"<<endl<<endl;	
+		cout<< "-----------------------"<<endl<<endl;	
     }
     system("pause");  
 }
 void Modificar()
 {
-	
+	int val;
 	int j, op;
 	
 	system("cls");
@@ -183,18 +218,18 @@ void Modificar()
         	cin >> j;
         	j = j-1;
         	
-        	cout << "*********Cita " << j+1 << "*******"<<endl;
+        	cout << "*************Cita " << j+1 << "*************"<<endl;
 			cout <<"Nombre: "<< nombre[j] <<endl;
 			cout <<"Hora: " << hora[j] <<endl;
 			cout <<"Tratamiento: " << trat[j] <<endl;
 			cout <<"Descripcion: " << desc[j] <<endl;
 			cout <<"Precio: "<< precio[j] <<endl;
 			cout <<"Cantidad: "<< cantidad[j] <<endl;
-			cout<< "..................."<<endl;
+			cout<< "........................"<<endl;
 			cout <<"Subtotal: $"<< subtotal[j] <<endl;
-			cout<< "-------------------"<<endl;
+			cout<< "-----------------------"<<endl;
 			cout <<"Total: $" << total[j] <<endl;
-			cout<< "-------------------"<<endl<<endl;
+			cout<< "-----------------------"<<endl<<endl;
 			
 			
 			do
@@ -208,8 +243,13 @@ void Modificar()
 		        {
 		            cout<<"..Modificando cita "<<i+1<<"..."<<endl;
 		            while (getchar() != '\n'); 
-					cout << "Nombre: " ;
-					getline(cin, nombre[i]);
+					do
+					{
+					cout << "*Ingrese nombre del paciente:" << endl;
+			        getline(cin, nombre[i]);
+			        
+			        val = Validar(nombre[i]);
+			        } while (val == 1);
 		        }
 		        break;
 		        
@@ -228,8 +268,13 @@ void Modificar()
 		        {
 		            cout<<"..Modificando cita "<<i+1<<"..."<<endl;
 		            while (getchar() != '\n'); 
-					cout << "Nombre del tratamiento: ";
-					getline(cin, trat[i]);
+					do
+					{
+			        cout << "*Nombre del tratamiento:" << endl;
+			        getline(cin, trat[i]);
+			        
+			        val = Validar(trat[i]);
+			        } while (val == 1);
 		        }
 		        break; 
 		        
@@ -238,8 +283,13 @@ void Modificar()
 		        {
 		            cout<<"..Modificando cita "<<i+1<<"..."<<endl;
 		            while (getchar() != '\n'); 
-					cout << "Descripcion del tratamiento: ";
-					getline(cin, desc[i]);
+					do
+			        {
+					
+			        cout << "*Descripcion del tratamiento:" << endl;
+			        getline(cin, desc[i]);
+			        val = Validar(desc[i]);
+			        } while (val == 1);
 		        }
 				break;
 				
@@ -247,7 +297,7 @@ void Modificar()
 				for(int i=j;i==j;i++)
 		        {
 		            cout<<"..Modificando cita "<<i+1<<"..."<<endl;
-		            //while (getchar() != '\n'); 
+		             
 					cout << "Precio unitario: ";
 					cin >> precio[i];
 					subtotal [i] = precio[i] * cantidad [i];
@@ -259,7 +309,7 @@ void Modificar()
 				for(int i=j;i==j;i++)
 		        {
 		            cout<<"..Modificando cita "<<i+1<<"..."<<endl;
-		            //while (getchar() != '\n'); 
+		            
 					cout << "Cantidad: ";
 					cin >> cantidad[i];
 					subtotal [i] = precio[i] * cantidad [i];
@@ -286,7 +336,8 @@ void Eliminar()
 {
 	int j;
 	system("cls");
-	cout << ".........................\n";
+	cout<< "***Citas actuales: " << cantPacientes << "***\n\n";
+	cout << ".........................................\n";
 	cout << "Registro a elimiar: ";
 	cin >> j;
 	j = j - 1;
@@ -330,16 +381,16 @@ void Archivos ()
 	
 	for (int i = 0;i < cantPacientes;i++)
 	{
-		if (nombre[i] == " " && trat[i] == " ")
+		if (nombre[i] == " " )
 		{
-			archivo << "\n________________________\n";
+			archivo << "\n_______________________\n";
 			archivo << "CITA ELIMINADA";
-			archivo << "\n________________________\n";
+			archivo << "\n______________________\n";
 		}
 		else
 		{
-			archivo << "________________________\n";
-			archivo << "-------CITA " << i+1 << "--------\n";
+			archivo << "__________________________________________________\n";
+			archivo << "---------------CITA " << i+1 << "--------------\n";
 			texto = nombre[i];
 			archivo << "Nombre: " << texto << "\n";
 			
@@ -365,26 +416,12 @@ void Archivos ()
 			
             total [i]= (subtotal [i] * 0.16) + subtotal[i];
             decimales = total [i];
-            archivo << "\n........................\n";
+            archivo << "\n.....................\n";
 			archivo << "TOTAL: $" << decimales;
-			archivo << "\n........................\n";
-			archivo << "_________________________\n\n";
+			archivo << "\n.....................\n";
+			archivo << "_______________________\n\n";
 			
 		}
 	}
 	
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
